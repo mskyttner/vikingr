@@ -1,0 +1,52 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# vikingr
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of `vikingr` is to provide a way to decode and work with data provided in the [AIS format](https://gpsd.gitlab.io/gpsd/AIVDM.html) from within R.
+
+Some demo data is bundled into the package that can be used offline as an example dataset. This data was captured from the Visby Harbor during the RaukR summer school 2019. This is a subset of some realistic data from the modern-day viking ships that traffic the Visby harbor in Gotland, Sweden.
+
+
+## Installation
+
+You can install the development version of `vikingr`from [GitHub](https://github.com/mskyttner/vikingr) with:
+
+```{r install, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("mskyttner/vikingr", build_vignettes = TRUE)
+```
+
+## Example
+
+This is a basic example which shows you how typical usage:
+
+```{r example}
+library(vikingr)
+library(dplyr)
+
+# display a few of the encoded messages
+
+log <- read_ais_log(system.file("extdata", "vikingr-visby-2019-ais", package = "vikingr"))
+knitr::kable(log %>% slice(1:5))
+
+# display a few decoded messages
+
+df <- read_ais(log$message)
+knitr::kable(df %>% slice(1:5) %>% select(1:5))
+
+```

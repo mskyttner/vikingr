@@ -1,0 +1,10 @@
+^docker$
+^README\.Rmd$
+^LICENSE\.md$
+^data-raw$
+^.*\.Rproj$
+^\.Rproj\.user$
+^kitematic$
+^Makefile$
+^\.bash_history$
+^\.rstudio$

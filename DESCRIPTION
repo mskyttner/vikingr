@@ -1,0 +1,29 @@
+Package: vikingr
+Title: Decode AIS Messages
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Markus",
+           family = "Skyttner",
+           role = c("aut", "cre"),
+           email = "markus@example.com")
+Description: Decode AIS messages using R and work with example data 
+  from modern-day viking ship traffic around Visby Harbor in Gotland from summer 2019.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+SystemRequirements: python
+Imports: 
+    dplyr,
+    purrr,
+    reticulate,
+    jsonlite,
+    here,
+    lubridate,
+    readr,
+    stringr,
+    tibble
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
