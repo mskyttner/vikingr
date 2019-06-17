@@ -41,13 +41,22 @@ library(dplyr)
 
 # display a few of the encoded messages
 
-log <- read_ais_log(system.file("extdata", "vikingr-visby-2019-ais", package = "vikingr"))
-knitr::kable(log %>% slice(1:5))
+log <- read_ais_log(
+  system.file("extdata", "vikingr-visby-2019-ais", 
+    package = "vikingr")
+)
+
+knitr::kable(escape = FALSE,
+  log %>% 
+  slice(2:5) %>% 
+  mutate(message = sprintf("<code>%s</code>", message))
+)
 
 # display a few decoded messages
 
 df <- read_ais(log$message)
-knitr::kable(df %>% slice(1:5) %>% select(1:5))
+
+knitr::kable(df %>% slice(1:5) %>% select(1:5), escape = FALSE)
 
 ```
 

@@ -45,24 +45,32 @@ library(dplyr)
 
 # display a few of the encoded messages
 
-log <- read_ais_log(system.file("extdata", "vikingr-visby-2019-ais", package = "vikingr"))
-knitr::kable(log %>% slice(1:5))
+log <- read_ais_log(
+  system.file("extdata", "vikingr-visby-2019-ais", 
+    package = "vikingr")
+)
+
+knitr::kable(escape = FALSE,
+  log %>% 
+  slice(2:5) %>% 
+  mutate(message = sprintf("<code>%s</code>", message))
+)
 ```
 
-| timestamp           | message                                                     |
-| :------------------ | :---------------------------------------------------------- |
-| 2019-06-12 12:15:38 | \!AIVDM,1,1,,A,H39n`218t@F1`<u861Jr04m=@E8>@,0\*29,142656   |
-| 2019-06-12 12:15:48 | \!AIVDM,1,1,,A,H39n\`<24TC=D744;49@Ej001P0030>,0\*0E,632874 |
-| 2019-06-12 12:16:06 | \!AIVDM,1,1,,B,13uDcBPOh01CcmBPvc\`eLnBB0D0?,0\*57,1476282  |
-| 2019-06-12 12:17:38 | \!AIVDM,1,1,,A,13uDcBP0001CcmNPvcWePnEB08GU,0\*32,5881853   |
-| 2019-06-12 12:26:44 | \!AIVDM,1,1,,A,H39wK\<P\<h586222222222222220,0\*6B,32127775 |
+| timestamp           | message                                                                  |
+| :------------------ | :----------------------------------------------------------------------- |
+| 2019-06-12 12:15:48 | <code>\!AIVDM,1,1,,A,H39n\`<24TC=D744;49@Ej001P0030>,0\*0E,632874</code> |
+| 2019-06-12 12:16:06 | <code>\!AIVDM,1,1,,B,13uDcBPOh01CcmBPvc\`eLnBB0D0?,0\*57,1476282</code>  |
+| 2019-06-12 12:17:38 | <code>\!AIVDM,1,1,,A,13uDcBP0001CcmNPvcWePnEB08GU,0\*32,5881853</code>   |
+| 2019-06-12 12:26:44 | <code>\!AIVDM,1,1,,A,H39wK\<P\<h586222222222222220,0\*6B,32127775</code> |
 
 ``` r
 
 # display a few decoded messages
 
 df <- read_ais(log$message)
-knitr::kable(df %>% slice(1:5) %>% select(1:5))
+
+knitr::kable(df %>% slice(1:5) %>% select(1:5), escape = FALSE)
 ```
 
 | msgtype | repeat |      mmsi | partno | shipname             |
