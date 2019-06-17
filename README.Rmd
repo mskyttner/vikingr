@@ -50,3 +50,34 @@ df <- read_ais(log$message)
 knitr::kable(df %>% slice(1:5) %>% select(1:5))
 
 ```
+
+## Development
+
+[![Get the GitHub CLI Badge](https://img.shields.io/badge/CLI-GitHub%20CLI%20Friendly-blue.svg)](https://hub.github.com)
+
+The [GitHub CLI tool](https://hub.github.com) can be used for reproducible collaboration workflows when collaborating on this (or any other) repo, for whatever reason - such as for convenience and automation support or perhaps because someone is handing out CLI badges and you want one ;). 
+
+Usage example while at the CLI, if you want to add a feature branch that provides command line support for using this R package along with usage examples:
+
+    $ hub clone mskyttner/vikingr
+    $ cd vikingr
+    
+    # create a topic branch
+    $ git checkout -b add-cli-support
+    
+    # make some changes... then ...
+    
+    $ git commit -m "done with feature"
+    
+    # It's time to fork the repo!
+    $ hub fork --remote-name=origin
+    → (forking repo on GitHub...)
+    → git remote add origin git@github.com:YOUR_USER/vikingr.git
+    
+    # push the changes to your new remote
+    $ git push origin feature
+    
+    # open a pull request for the topic branch you've just pushed
+    $ hub pull-request
+    → (opens a text editor for your pull request message)
+
