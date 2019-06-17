@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_ais.R
 \name{read_ais_log}
 \alias{read_ais_log}
-\title{Read a log file with AIS messages}
+\title{Read a log file with lines containing comma separated Unix timestamps and AIS messages}
 \usage{
 read_ais_log(file, ...)
 }

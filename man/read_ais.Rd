@@ -15,6 +15,12 @@ read_ais(file, ...)
 a tibble with AIS data
 }
 \description{
-`read_ais` wraps `readr::read_lines()` but reads AIS messages
+`read_ais` wraps `readr::read_lines()` and reads AIS messages 
+making use of the ais.py code from \url{https://gist.github.com/ieb/9c337d68a4492db1571e} 
+which has been bundled into the package. This function therefore 
+has a dependency on python as stated in the SystemRequirements entry 
+in the DESCRIPTION file.
+}
+\details{
 Use the same parameters as for `readr::read_lines()`
 }

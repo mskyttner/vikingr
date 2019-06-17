@@ -1,7 +1,11 @@
 #' Decode ais messages
 #' 
-#' `read_ais` wraps `readr::read_lines()` but reads AIS messages
-
+#' `read_ais` wraps `readr::read_lines()` and reads AIS messages 
+#' making use of the ais.py code from \url{https://gist.github.com/ieb/9c337d68a4492db1571e} 
+#' which has been bundled into the package. This function therefore 
+#' has a dependency on python as stated in the SystemRequirements entry 
+#' in the DESCRIPTION file.
+#' 
 #' Use the same parameters as for `readr::read_lines()`
 #' @param file a path to a file, connection or literal data
 #' @param ... params sent on to read_lines
@@ -34,7 +38,7 @@ read_ais <- function(file, ...) {
   map_df(json, possibly_json_to_df)
 }
 
-#' Read a log file with AIS messages
+#' Read a log file with lines containing comma separated Unix timestamps and AIS messages
 #' 
 #' Takes a log file and parses valid rows into a tibble of timestamps and AIS messages
 
