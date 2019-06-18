@@ -13,6 +13,7 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map_df possibly
 #' @importFrom tibble tibble
+#' @importFrom dplyr mutate tbl_df tbl filter
 #' @export
 read_ais <- function(file, ...) {
 
@@ -28,14 +29,37 @@ read_ais <- function(file, ...) {
   
   json <- system(cmd, intern = TRUE, input = mess)
   
-  json_to_df <- function(x) 
-    fromJSON(x, simplifyDataFrame = TRUE, flatten = TRUE)
-  
+  json_to_df <- function(x) {
+    df <- fromJSON(x, simplifyDataFrame = TRUE, flatten = TRUE)
+  }
   possibly_json_to_df <- possibly(
     .f = json_to_df, 
     otherwise = tibble(is_error = TRUE))
   
-  map_df(json, possibly_json_to_df)
+  res <- 
+    map_df(json, possibly_json_to_df) %>%
+    filter(is.na(is_error))
+
+  problem_rowindices <- which(mess %in% setdiff(mess, res$message))
+  problem_messages <- mess[problem_rowindices]
+  
+  if (length(problem_rowindices) > 0) {
+    
+    warning(sprintf("%s parsing failure(s) for a total of %s messages. Use readr::problems() for details.",
+      length(problem_rowindices), length(mess)))
+    
+    attr(res, "problems") <- structure(
+      data.frame(
+        row = problem_rowindices, 
+        col = "message", 
+        expected = "ais.py-compliant data",
+        actual = problem_messages,
+        stringsAsFactors = FALSE
+      ), class = c("tbl_df", "tbl", "data.frame")
+    )
+  }
+
+  return (res)
 }
 
 #' Read a log file with lines containing comma separated Unix timestamps and AIS messages
@@ -66,7 +90,27 @@ read_ais_log <- function(file, ...) {
 #' @importFrom utils globalVariables
 if (getRversion() >= "2.15.1")
   globalVariables(names = unlist(strsplit(split = " ",
-    paste0("timestamp"))))
+    paste0("timestamp message is_error"))))
+
+#' Get path to readr_ais example data
+#'
+#' vikingr comes bundled with sample files in its `inst/extdata`
+#' directory. This function make them easy to access
+#'
+#' @param path Name of file. If `NULL`, the example files will be listed.
+#' @export
+#' @examples
+#' vikingr_example()
+#' vikingr_example("vikingr-visby-2019-ais")
+#' vikingr_example("nmea-sample")
+vikingr_example <- function(path = NULL) {
+  
+  if (is.null(path)) {
+    dir(system.file("extdata", package = "vikingr"))
+  } else {
+    system.file("extdata", path, package = "vikingr", mustWork = TRUE)
+  }
+}
 
 # library(reticulate)
 # library(readr)

@@ -2,8 +2,12 @@
 
 export(read_ais)
 export(read_ais_log)
+export(vikingr_example)
 importFrom(dplyr,"%>%")
+importFrom(dplyr,filter)
 importFrom(dplyr,mutate)
+importFrom(dplyr,tbl)
+importFrom(dplyr,tbl_df)
 importFrom(jsonlite,fromJSON)
 importFrom(lubridate,as_datetime)
 importFrom(purrr,map_df)

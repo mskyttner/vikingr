@@ -1335,7 +1335,7 @@ if __name__ == "__main__":
                             return '"' + str(x) + '"'
                         else:
                             return str(x)
-                    print("{" + ",".join(['"' + x[0].name + '":' +
+                    print("{" + quotify("message") + ":" + quotify(raw.rstrip()) + "," + ",".join(['"' + x[0].name + '":' +
                           quotify(x[1]) for x in parsed]) + "}")
                 elif dsv:
                     print("|".join([str(x[1]) for x in parsed]))

@@ -36,27 +36,51 @@ devtools::install_github("mskyttner/vikingr", build_vignettes = TRUE)
 This is a basic example which shows you how typical usage:
 
 ```{r example}
+
+suppressPackageStartupMessages(library(dplyr))
+library(knitr)
 library(vikingr)
-library(dplyr)
 
-# display a few of the encoded messages
+# get a few of the encoded messages
 
-log <- read_ais_log(
-  system.file("extdata", "vikingr-visby-2019-ais", 
-    package = "vikingr")
-)
+log <- read_ais_log(vikingr_example("vikingr-visby-2019-ais"))
 
-knitr::kable(escape = FALSE,
+# display some encoded messages, but ...
+# escape the message which otherwise can appear
+# garbled when displayed in the markdown
+
+log_escaped <- 
   log %>% 
   slice(2:5) %>% 
   mutate(message = sprintf("<code>%s</code>", message))
-)
 
-# display a few decoded messages
+kable(escape = FALSE, log_escaped)
+
+# decode messages 
+
 
 df <- read_ais(log$message)
 
-knitr::kable(df %>% slice(1:5) %>% select(1:5), escape = FALSE)
+# display a few decoded messages, escaping the raw message
+
+df_escaped <- 
+  df %>% 
+  slice(1:5) %>% 
+  select(1:5) %>%
+  mutate(message = sprintf("<code>%s</code>", message))
+
+kable(df_escaped, escape = FALSE)
+
+# display a few of the parsing issues with readr::problems()
+
+library(readr)
+
+parsing_issues <- 
+  problems(df) %>% 
+  slice(1:5) %>% 
+  mutate(actual = sprintf("<code>%s</code>", actual))
+
+kable(parsing_issues, escape = FALSE)
 
 ```
 
@@ -84,7 +108,7 @@ Usage example while at the CLI, if you want to add a feature branch that provide
     → git remote add origin git@github.com:YOUR_USER/vikingr.git
     
     # push the changes to your new remote
-    $ git push origin feature
+    $ git push origin add-cli-support
     
     # open a pull request for the topic branch you've just pushed
     $ hub pull-request
