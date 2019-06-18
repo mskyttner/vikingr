@@ -14,6 +14,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 SystemRequirements: python
+Depends: R (>= 2.10)
 Imports: 
     dplyr,
     purrr,

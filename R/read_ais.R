@@ -15,6 +15,11 @@
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate tbl_df tbl filter
 #' @export
+#' @examples
+#' \dontrun{
+#' download.file("http://www.aishub.net/downloads/nmea-sample.zip", destfile = "/tmp/nmea-sample.zip")
+#' read_ais("/tmp/nmea-sample.zip")
+#' }
 read_ais <- function(file, ...) {
 
   if (Sys.which("python") == "")
@@ -90,7 +95,7 @@ read_ais_log <- function(file, ...) {
 #' @importFrom utils globalVariables
 if (getRversion() >= "2.15.1")
   globalVariables(names = unlist(strsplit(split = " ",
-    paste0("timestamp message is_error"))))
+    paste0("timestamp message is_error py"))))
 
 #' Get path to readr_ais example data
 #'
@@ -112,6 +117,43 @@ vikingr_example <- function(path = NULL) {
   }
 }
 
+#' Enums from ais.py
+#' 
+#' Runs python code from ais.py to return ship type legends
+#' @return tibble with ship type ids and descriptions
+#' @importFrom purrr map_chr
+#' @importFrom reticulate py_run_string py_available
+#' @importFrom readr read_lines
+#' @importFrom tibble tibble
+#' @export
+#' @examples
+#' \dontrun{
+#' ais_enumerations()
+#' }
+ais_enumerations <- function() {
+  ais_enums
+  # library(reticulate); library(readr); library(purrr)
+  # if (!py_available(initialize = TRUE))
+  #   stop("Is python installed? reticulate::py_available reports FALSE.")
+  # ais_py <- read_lines(system.file("python", "ais.py", package = "vikingr"))
+  # # oops! hard coded line numbers :(
+  # py_ship_types <- paste(collapse = "\n", ais_py[213:314]) 
+  # py_status_types <- paste(collapse = "\n", ais_py[96:113])
+  # 
+  # py_run_string(py_ship_types)
+  # py_run_string(py_status_types)
+  # 
+  # legends <- map_chr(py$ship_type_legends, 1)
+  # statuses <- map_chr(py$cnb_status_legends, 1)
+  # 
+  # # assumes here that pyhon uses zero-based indexing in the lookup table
+  # res <- list(
+  #   ship_types = tibble(id = seq.int(from = 0, to = length(legends) - 1), desc = legends),
+  #   status_types = tibble(id = seq.int(from = 0, to = length(statuses) - 1), desc = statuses)
+  # )
+}
+
+
 # library(reticulate)
 # library(readr)
 # library(here)
@@ -122,10 +164,9 @@ vikingr_example <- function(path = NULL) {
 # #res <- read_ais(mess, FALSE, TRUE, FALSE)
 # #str(res)
 # 
-# # parse ais message using Python ais.py
-# library(jsonlite)
-# 
-# cat(json)
-# 
-# library(purrr)
+#mymsg <- log$message[1:2] %>% paste0(collapse = "\n")
+#mycon <- rawConnection(charToRaw(mymsg), "r+")
+#read_ais(mycon)
 
+#library(reticulate)
+#source_python(system.file("python", "ais.py", package = "vikingr"))

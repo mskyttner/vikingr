@@ -24,3 +24,9 @@ in the DESCRIPTION file.
 \details{
 Use the same parameters as for `readr::read_lines()`
 }
+\examples{
+\dontrun{
+download.file("http://www.aishub.net/downloads/nmea-sample.zip", destfile = "/tmp/nmea-sample.zip")
+read_ais("/tmp/nmea-sample.zip")
+}
+}
