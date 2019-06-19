@@ -107,6 +107,7 @@ if (getRversion() >= "2.15.1")
 #' @examples
 #' vikingr_example()
 #' vikingr_example("vikingr-visby-2019-ais")
+#' vikingr_example("vikingr-visby-2019-ais-2")
 vikingr_example <- function(path = NULL) {
   
   if (is.null(path)) {
