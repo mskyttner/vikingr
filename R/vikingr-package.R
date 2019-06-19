@@ -11,7 +11,7 @@ NULL
 #py <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  if (!py_available(initialize = TRUE))
+  if (!reticulate::py_available(initialize = TRUE))
     stop("Is python installed? reticulate::py_available reports FALSE.")
 #  py <<- py
 }
