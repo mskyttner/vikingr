@@ -10,4 +10,5 @@
 ^\.rstudio$
 ^.config$
 ^doc$
+^docs$
 ^Meta$

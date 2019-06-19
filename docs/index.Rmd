@@ -1,0 +1,127 @@
+---
+title: "RaukR presentation - vikingr demo"
+subtitle: "RaukR 2019 • Advanced R for Bioinformatics"
+author: "<b>Ben Pontiller, Andreas Schneider, Markus Skyttner</b>"
+institute: ""
+keywords: r, RaukR, markdown
+output: 
+  xaringan::moon_reader:
+    encoding: 'UTF-8'
+    self_contained: false
+    chakra: 'assets/remark-latest.min.js'
+    css: 'assets/presentation.css'
+    lib_dir: libs
+    nature:
+      ratio: '4:3'
+      highlightLanguage: r
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: "RaukR 2019 • %current%/%total%"
+---
+exclude: true
+count: false
+
+```{r,echo=FALSE,child="assets/header-presentation.Rmd"}
+```
+
+<!-- ----------------- Only edit title & author above this ----------------- -->
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+# only load the packages you need
+
+```
+
+---
+name: intro
+class: middle, spaced
+
+## Introduction
+
+### "Decode this AIS message"
+
+> .large[1560376557, !AIVDM,1,1,,A,13uDcBP0001CcmjPvca;d6Cn0<09,0*27,1121886915]
+
+
+### Reference: [AIS format - https://gpsd.gitlab.io/gpsd/AIVDM.html](https://gpsd.gitlab.io/gpsd/AIVDM.html)
+
+> .large[More than 50 lookup tables and descriptions of possibly valid approaches for parsing along with some sample data]
+
+---
+name: inspiration
+class: middle, spaced
+
+## Inspiration
+
+* One or many messages - baked into lines in a log file - are to be read and decoded 
+* Tidyverse `readr` offers `read_lines()` and can read from text streams
+* If there are parsing issues - inspect them with `readr::problems()`
+
+> Let's do it like that! 
+
+* The reference materials mentions `ais.py` - a file somewhere on the Internet
+* Let's use that one - maybe we can call it with `reticulate` from R?
+
+
+---
+name: lessons
+class: middle, spaced
+
+## Lessons
+
+### Data and python issues
+
+* Laptop crash! -> new laptop - this old one doesn't like `reticulate` - memory leaks?
+* Log example data contains (timestamp, message) tuples but also other junk
+* Wrapping `ais.py` needs a timestamp to link messages to the original log
+* So this needs a small edit of the `ais.py` file to add this to the JSON output
+* Turns out `ais.py` works well but the JSON could be more detailed
+
+### Package development
+
+* Rebuilding vignettes and reloading package documentation is shaky
+* Live with restarting R session and wiping environment for the vignettes
+* A vignette can be a flexdashboard - but can get big embedding data, would annoy CRAN
+
+---
+name: results
+class: middle, spaced
+
+## Results
+
+Repo: [https://github.com/mskyttner/vikingr](https://github.com/mskyttner/vikingr)
+
+
+### Functions
+
+* Function to read the log
+* Function to decode the AIS message(s)
+
+### Data
+
+* Sample data from Visby Harbor
+* Should work with other sample dataset
+
+### Visuals
+
+* Flexdashboard with leaflet map
+
+> .large[Try it from [https://mskyttner.github.io/vikingr/vikingr-x.html](https://mskyttner.github.io/vikingr/vikingr-x.html)!]
+
+Bonus: [Dockerized](https://github.com/mskyttner/vikingr/docker)
+
+---
+name: thanks
+class: middle, spaced
+
+# Thank you. Questions?
+
+```{r,echo=FALSE,child="assets/footer-presentation.Rmd"}
+```
+
+```{r,include=FALSE,eval=FALSE}
+# manually run this to render this document to HTML
+rmarkdown::render("index.Rmd")
+# manually run this to convert HTML to PDF
+#pagedown::chrome_print("presentation_demo.html",output="presentation_demo.pdf")
+```

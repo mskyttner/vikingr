@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>RaukR presentation - vikingr demo</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Ben Pontiller, Andreas Schneider, Markus Skyttner" />
+    <meta name="keywords" content="r, RaukR, markdown" />
+    <link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+    <link id="font-awesome-1-attachment" rel="attachment" href="libs/font-awesome-5.1.0/fonts/fontawesome-webfont.ttf"/>
+    <link rel="stylesheet" href="assets/presentation.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# RaukR presentation - vikingr demo
+## RaukR 2019 • Advanced R for Bioinformatics
+### <b>Ben Pontiller, Andreas Schneider, Markus Skyttner</b>
+
+---
+
+exclude: true
+count: false
+
+
+&lt;link href="https://fonts.googleapis.com/css?family=Roboto|Source+Sans+Pro:300,400,600|Ubuntu+Mono&amp;amp;subset=latin-ext" rel="stylesheet"&gt;
+
+
+
+
+
+&lt;!-- ----------------- Only edit title &amp; author above this ----------------- --&gt;
+
+
+
+---
+name: intro
+class: middle, spaced
+
+## Introduction
+
+### "Decode this AIS message"
+
+&gt; .large[1560376557, !AIVDM,1,1,,A,13uDcBP0001CcmjPvca;d6Cn0&lt;09,0*27,1121886915]
+
+
+### Reference: [AIS format - https://gpsd.gitlab.io/gpsd/AIVDM.html](https://gpsd.gitlab.io/gpsd/AIVDM.html)
+
+&gt; .large[More than 50 lookup tables and descriptions of possibly valid approaches for parsing along with some sample data]
+
+---
+name: inspiration
+class: middle, spaced
+
+## Inspiration
+
+* One or many messages - baked into lines in a log file - are to be read and decoded 
+* Tidyverse `readr` offers `read_lines()` and can read from text streams
+* If there are parsing issues - inspect them with `readr::problems()`
+
+&gt; Let's do it like that! 
+
+* The reference materials mentions `ais.py` - a file somewhere on the Internet
+* Let's use that one - maybe we can call it with `reticulate` from R?
+
+
+---
+name: lessons
+class: middle, spaced
+
+## Lessons
+
+### Data and python issues
+
+* Laptop crash! -&gt; new laptop - this old one doesn't like `reticulate` - memory leaks?
+* Log example data contains (timestamp, message) tuples but also other junk
+* Wrapping `ais.py` needs a timestamp to link messages to the original log
+* So this needs a small edit of the `ais.py` file to add this to the JSON output
+* Turns out `ais.py` works well but the JSON could be more detailed
+
+### Package development
+
+* Rebuilding vignettes and reloading package documentation is shaky
+* Live with restarting R session and wiping environment for the vignettes
+* A vignette can be a flexdashboard - but can get big embedding data, would annoy CRAN
+
+---
+name: results
+class: middle, spaced
+
+## Results
+
+Repo: [https://github.com/mskyttner/vikingr](https://github.com/mskyttner/vikingr)
+
+
+### Functions
+
+* Function to read the log
+* Function to decode the AIS message(s)
+
+### Data
+
+* Sample data from Visby Harbor
+* Should work with other sample dataset
+
+### Visuals
+
+* Flexdashboard with leaflet map
+
+&gt; .large[Try it from [https://mskyttner.github.io/vikingr/vikingr-x.html](https://mskyttner.github.io/vikingr/vikingr-x.html)!]
+
+Bonus: [Dockerized](https://github.com/mskyttner/vikingr/docker)
+
+---
+name: thanks
+class: middle, spaced
+
+# Thank you. Questions?
+
+
+&lt;p&gt;R version 3.4.4 (2018-03-15)&lt;br&gt;&lt;p&gt;Platform: x86_64-pc-linux-gnu (64-bit)&lt;/p&gt;&lt;p&gt;OS: Ubuntu 18.04.2 LTS&lt;/p&gt;&lt;br&gt;
+
+Built on : &lt;i class='fa fa-calendar' aria-hidden='true'&gt;&lt;/i&gt; 19-jun-2019 at &lt;i class='fa fa-clock-o' aria-hidden='true'&gt;&lt;/i&gt; 22:37:20  
+
+__2019__ • [SciLifeLab](https://www.scilifelab.se/) • [NBIS](https://nbis.se/)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="assets/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "4:3",
+"highlightLanguage": "r",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "RaukR 2019 • %current%/%total%"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
