@@ -1,0 +1,107 @@
+---
+title: "Using vikingr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The goal of `vikingr` - [name etymology](https://en.wikipedia.org/wiki/Vikings#Etymology) - is to provide a way to decode and work with data provided in the [AIS format](https://gpsd.gitlab.io/gpsd/AIVDM.html) from within R. 
+
+Some demo data is bundled into the package that can be used offline as an example dataset. This data was captured from the Visby Harbor during the RaukR summer school 2019. This is a subset of some realistic data from the modern-day viking ships that traffic the Visby harbor in Gotland, Sweden.
+
+## Installation
+
+You can install the development version of `vikingr`from [GitHub](https://github.com/mskyttner/vikingr) with:
+
+```{r install, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("mskyttner/vikingr", build_vignettes = TRUE)
+
+# or if you have devtools > 2.0
+devtools::install_github("mskyttner/vikingr", dependencies = TRUE 
+  build = TRUE, build_opts = c("--no-resave-data", "--no-manual"))
+```
+
+## Example
+
+This is a basic example which shows typical usage:
+
+```{r example}
+suppressPackageStartupMessages(library(dplyr))
+library(knitr)
+library(vikingr)
+
+# get a few of the encoded messages from the bundled example log file
+log <- read_ais_log(vikingr_example("vikingr-visby-2019-ais"))
+
+# the log file is now available as a tibble with timestamps and messages
+print(head(log$message, 5))
+
+# decode messages and add timestamps from the log
+parsed_messages <- read_ais(log$message)
+
+df <-
+  parsed_messages %>% 
+  left_join(log) %>% 
+  select(timestamp, everything())
+
+# display one of the decoded messages
+record <- 
+  df %>% slice(1) %>% t() %>% as.vector() %>% tibble() %>% 
+  mutate(field = names(df)) %>% 
+  select(field, value = 1)
+
+kable(record)
+
+# display a few of the parsing issues with readr::problems()
+
+library(readr)
+
+parsing_issues <- 
+  problems(parsed_messages) %>% 
+  slice(1:5) %>% 
+  mutate(actual = sprintf("<code>%s</code>", actual))
+
+kable(parsing_issues, escape = FALSE)
+
+```
+
+## Benchmark
+
+The performance on a 7 year laptop is around approx 2000 msgs per second, see benchmarks below:
+
+
+```{r}
+library(microbenchmark)
+
+cap_log <- function(lc) {
+  read_lines(n_max = lc, vikingr_example("vikingr-visby-2019-ais"))
+}
+
+# reading the log file for different number of messages
+microbenchmark(times = 1,
+  read_ais_log(cap_log(1000)),
+  read_ais_log(cap_log(2000)),
+  read_ais_log(cap_log(3000))
+)
+
+cap_msg <- function(lc) read_ais_log(cap_log(lc))$message
+# decoding ais messages for different number of messages
+microbenchmark(times = 1,
+  read_ais(cap_msg(1000)),
+  read_ais(cap_msg(2000)),
+  read_ais(cap_msg(3000))
+)
+
+
+```
+

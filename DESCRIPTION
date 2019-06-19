@@ -32,5 +32,7 @@ Suggests:
     magick,
     leaflet,
     flexdashboard,
-    DT
+    DT,
+    rsvg,
+    microbenchmark
 VignetteBuilder: knitr

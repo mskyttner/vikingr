@@ -28,11 +28,15 @@ You can install the development version of `vikingr`from [GitHub](https://github
 ```{r install, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("mskyttner/vikingr", build_vignettes = TRUE)
+
+# or if devtools is > 2.0
+devtools::install_github("mskyttner/vikingr", dependencies = TRUE,
+  build = TRUE, build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ## Example
 
-This is a basic example which shows you how typical usage:
+This is a basic example which shows typical usage:
 
 ```{r example}
 
