@@ -2,4 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.config
 inst/doc
+doc
+Meta

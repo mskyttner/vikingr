@@ -1,0 +1,189 @@
+---
+title: "Viking ships at and around Visby Harbor"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+vignette: >
+  %\VignetteIndexEntry{demoreport}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(vikingr)
+library(dplyr)
+library(purrr)
+library(leaflet)
+library(magick)
+
+# get the data from the log
+log <- read_ais_log(vikingr_example("vikingr-visby-2019-ais"))
+decoded <- read_ais(log$message)
+df <- log %>% left_join(decoded) %>% mutate(mmsi = as.character(mmsi))
+
+# wrangling
+
+shipnames <- 
+  df %>%
+  count(mmsi, shipname) %>%
+  filter(!is.na(shipname)) %>%
+  arrange(desc(n)) %>%
+  select(mmsi, shipname) %>%
+  mutate(shipname = stringr::str_trim(shipname))
+
+enums <- ais_enumerations()
+
+shiptypes <- 
+  df %>%
+  count(shiptype, mmsi) %>%
+  left_join(enums$ship_types, by = c("shiptype" = "id")) %>%
+  filter(!is.na(desc)) %>%
+  rename(shiptype_desc = desc) %>%
+  select(mmsi, shiptype, shiptype_desc)
+
+callsigns <- 
+  df %>%
+  count(mmsi, callsign) %>%
+  filter(!is.na(callsign)) %>%
+  select(mmsi, callsign)
+
+vendors <- 
+  df %>%
+  count(mmsi, vendorid) %>%
+  filter(!is.na(vendorid)) %>%
+  select(mmsi, vendorid)
+
+# list of ships
+ships <- 
+  left_join(tibble(mmsi = as.vector(na.omit(unique(df$mmsi)))), callsigns) %>%
+  left_join(shipnames) %>%
+  left_join(vendors) %>%
+  left_join(shiptypes) %>%
+  arrange(desc(shipname, callsign)) %>%
+  mutate(mmsi = as.character(mmsi))
+
+# status changes ?
+statuses <- 
+  df %>% count(status, mmsi) %>% 
+  left_join(enums$status_types, by = c("status" = "id")) %>%
+  select(-status) %>%
+  mutate(mmsi = as.character(mmsi)) %>%
+  left_join(ships, by = "mmsi")
+
+last_positions <- 
+  df %>% 
+  filter(!is.na(lat), !is.na(lon)) %>%
+  select(mmsi, timestamp, lat, lon) %>%
+#  mutate(lat = lat / 60000, lon = lon/60000) %>%
+  group_by(mmsi) %>%
+  filter(timestamp == max(timestamp)) %>%
+  left_join(ships) %>%
+  select(shipname, shiptype_desc, lat, lon, timestamp)
+
+baltica_yachts <- 
+  df %>% 
+  filter(mmsi %in% "261032140") %>%
+  select(timestamp, to_bow:radio) %>%
+  left_join(enums$status_types, by = c("status" = "id")) %>%
+  arrange(desc(timestamp))
+  View
+
+"https://cdn4.iconfinder.com/data/icons/viking/500/viking_8-512.png" %>%
+  image_read() %>%
+  image_resize("38x38") %>%
+  image_write("/tmp/ship1.png")
+
+"https://image.flaticon.com/icons/png/512/287/287124.png" %>%
+  image_read() %>%
+  image_resize("38x38") %>%
+  image_write("/tmp/ship2.png")
+
+"http://icons.iconarchive.com/icons/icons8/ios7/512/Cultures-Viking-Ship-icon.png" %>%
+  image_read() %>%
+  image_resize("38x38") %>%
+  image_write("/tmp/ship3.png")
+
+image_read_svg("https://nbisweden.github.io/RaukR-2019/GeneralStats/Lab_GeneralStats/assets/logo.svg") %>%
+  image_normalize() %>%
+  image_resize("38x38") %>%
+  image_write("/tmp/raukr.png")
+
+ship_icons <- icons(
+  iconUrl = recode(ships$shiptype_desc, .missing = "/tmp/ship3.png", 
+    Sailing = "/tmp/ship1.png",
+    `Pleasure Craft` = "/tmp/ship2.png"),
+  iconWidth = 38, iconHeight = 38,
+  iconAnchorX = 22, iconAnchorY = 22
+)
+
+ship_icons$iconUrl <- c(ship_icons$iconUrl, "/tmp/raukr.png")
+
+pos <- 
+  last_positions %>% 
+  mutate(lat = lat / 600000, lon = lon / 600000) %>%
+  mutate(popup = sprintf("<b><a href='https://www.vesselfinder.com/vessels?name=%s'>%s</a></b><br/>Last seen:%s</br>Ship type:%s",
+    mmsi, shipname, timestamp, shiptype_desc))
+
+raukr <- 
+  tibble(lat = 57.639383, lon = 18.28861, shipname = "Raukr-2019", shiptype = "raukr",
+       popup = "<b><a href='https://raukr.slack.com'>Raukr 2019!</a></b>")
+
+vessels <- bind_rows(pos, raukr)
+
+map <- 
+  leaflet(data = vessels) %>% 
+  addProviderTiles("Stamen.Watercolor") %>%
+  addMarkers(~lon, ~lat, icon = ship_icons, popup = vessels$popup)
+
+
+#htmlwidgets::saveWidget(map, file = "vikingr-map.html")
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Last known positions of ships
+
+```{r}
+map
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Ships summary
+
+```{r}
+library(DT)
+
+dt <- ships %>% mutate(mmsi = 
+    sprintf("<b><a href='https://www.vesselfinder.com/vessels?name=%s'>%s</a>", 
+            mmsi, shipname))
+
+datatable(dt, fillContainer = TRUE, rownames = FALSE, escape = FALSE,
+          options = list(pageLength = 30, dom = "t"))
+```
+
+### Data source summary
+
+```{r}
+# duration and time period
+
+span <- max(df$timestamp) - min(df$timestamp)
+dur <- paste(as.character(span), "days")
+valueBox(dur, caption = "Duration", icon = "fa-calendar")
+
+# message count over time
+library(lubridate)
+activity <- 
+  df %>% mutate(day = day(timestamp), hour = hour(timestamp), month = month(timestamp)) %>%
+  mutate(time_bin = parse_date_time(sprintf("2019-%s-%s %s", month, day, hour), "ymd H")) %>%
+  group_by(time_bin) %>% count()
+
+# make a ggplot2 of the activity?
+
+```
+

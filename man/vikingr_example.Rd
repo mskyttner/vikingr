@@ -16,5 +16,4 @@ directory. This function make them easy to access
 \examples{
 vikingr_example()
 vikingr_example("vikingr-visby-2019-ais")
-vikingr_example("nmea-sample")
 }

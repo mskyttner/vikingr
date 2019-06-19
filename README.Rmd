@@ -17,10 +17,9 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of `vikingr` is to provide a way to decode and work with data provided in the [AIS format](https://gpsd.gitlab.io/gpsd/AIVDM.html) from within R.
+The goal of `vikingr` - [name etymology](https://en.wikipedia.org/wiki/Vikings#Etymology) - is to provide a way to decode and work with data provided in the [AIS format](https://gpsd.gitlab.io/gpsd/AIVDM.html) from within R. Or rather the primary goal is to use some of the techniques taught at the Raukr 2019 workshop when creating an R package.
 
 Some demo data is bundled into the package that can be used offline as an example dataset. This data was captured from the Visby Harbor during the RaukR summer school 2019. This is a subset of some realistic data from the modern-day viking ships that traffic the Visby harbor in Gotland, Sweden.
-
 
 ## Installation
 
@@ -56,10 +55,14 @@ log_escaped <-
 
 kable(escape = FALSE, log_escaped)
 
-# decode messages 
+# decode messages and add timestamps from the log
 
+parsed_messages <- read_ais(log$message)
 
-df <- read_ais(log$message)
+df <-
+  parsed_messages %>% 
+  left_join(log) %>% 
+  select(timestamp, everything())
 
 # display a few decoded messages, escaping the raw message
 
@@ -76,13 +79,30 @@ kable(df_escaped, escape = FALSE)
 library(readr)
 
 parsing_issues <- 
-  problems(df) %>% 
+  problems(parsed_messages) %>% 
   slice(1:5) %>% 
   mutate(actual = sprintf("<code>%s</code>", actual))
 
 kable(parsing_issues, escape = FALSE)
 
 ```
+
+Inspect a single record:
+
+```{r}
+# these are the details for a single record
+record <- 
+  df %>% slice(1) %>% t() %>% as.vector() %>% tibble() %>% 
+  mutate(field = names(df)) %>% 
+  select(field, value = 1)
+
+kable(record)
+
+```
+
+## Improvements
+
+Parsed data for individual records can be checked against results from other parsers or web services that can parse AIS messages. Improvements can be sent as a PR, for details see instructions below.
 
 ## Development
 

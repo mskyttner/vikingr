@@ -1,7 +1,7 @@
 Package: vikingr
 Title: Decode AIS Messages
 Version: 0.0.0.9000
-Authors@R:  c(
+Authors@R: c(
     person("Ben", "Pontiller", role = c("aut")),
     person("Andreas", "Schneider", role = c("aut")),
     person(given = "Markus",
@@ -28,5 +28,9 @@ Imports:
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    magick,
+    leaflet,
+    flexdashboard,
+    DT
 VignetteBuilder: knitr

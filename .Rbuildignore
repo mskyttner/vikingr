@@ -8,3 +8,6 @@
 ^Makefile$
 ^\.bash_history$
 ^\.rstudio$
+^.config$
+^doc$
+^Meta$
