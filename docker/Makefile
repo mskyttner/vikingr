@@ -10,12 +10,12 @@ build:
 	# uses rocker/geospatial:3.6.0 but extends it with 
 	# system libraries pdftk, libpoppler-cpp-dev etc
 	# and R packages staplr, magick, pdftools, officer etc
-	docker build -t recraft/raukr:3.6.0 .
+	docker build -t mskyttner/raukr:3.6.0 .
 	
 up:
 	docker run --name raukr -u $(UID):$(GID) \
 		-d -p 8787:8787 -e PASSWORD=raukr \
-		-v "$(PWD):/home/rstudio" recraft/raukr:3.6.0
+		-v "$(PWD):/home/rstudio" mskyttner/raukr:3.6.0
 	echo "Use rstudio/raukr to login!"; sleep 3;
 	firefox localhost:8787 &
 	
@@ -49,4 +49,4 @@ encrypt-report:
 
 release:
 	docker login
-	docker push recraft/raukr:3.6.0
+	docker push mskyttner/raukr:3.6.0

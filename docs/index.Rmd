@@ -108,7 +108,7 @@ Repo: [https://github.com/mskyttner/vikingr](https://github.com/mskyttner/viking
 
 > .large[Try it from [https://mskyttner.github.io/vikingr/vikingr-x.html](https://mskyttner.github.io/vikingr/vikingr-x.html)!]
 
-Bonus: [Dockerized](https://github.com/mskyttner/vikingr/docker)
+Bonus: [Dockerized](https://github.com/mskyttner/vikingr/tree/master/docker)
 
 ---
 name: thanks
