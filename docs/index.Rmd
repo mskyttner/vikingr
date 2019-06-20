@@ -48,6 +48,22 @@ class: middle, spaced
 > .large[More than 50 lookup tables and descriptions of possibly valid approaches for parsing along with some sample data]
 
 ---
+name: intro
+class: middle, spaced
+
+## Introduction
+
+### AIS: Automatic Identification System
+
++ intended to assist a vessel's watchstanding officers and allow maritime authorities to track and monitor vessel movements
++ info such as unique identification, position, course, and speed; sent in tight intervals by every vessel
+
+<img src="assets/Screenshot 2019-06-19 at 23.28.05.png" width="350px" align="right">
+<img src="assets/Screenshot 2019-06-19 at 23.28.28.png" width="400px" align="left">
+
+
+
+---
 name: inspiration
 class: middle, spaced
 
@@ -73,6 +89,7 @@ class: middle, spaced
 
 * Laptop crash! -> new laptop - this old one doesn't like `reticulate` - memory leaks?
 * Log example data contains (timestamp, message) tuples but also other junk
+* Big differences in data between ships (7000/10000 from one little coast guard boat, NAs)
 * Wrapping `ais.py` needs a timestamp to link messages to the original log
 * So this needs a small edit of the `ais.py` file to add this to the JSON output
 * Turns out `ais.py` works well but the JSON could be more detailed

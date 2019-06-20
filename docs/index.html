@@ -50,6 +50,22 @@ class: middle, spaced
 &gt; .large[More than 50 lookup tables and descriptions of possibly valid approaches for parsing along with some sample data]
 
 ---
+name: intro
+class: middle, spaced
+
+## Introduction
+
+### AIS: Automatic Identification System
+
++ intended to assist a vessel's watchstanding officers and allow maritime authorities to track and monitor vessel movements
++ info such as unique identification, position, course, and speed; sent in tight intervals by every vessel
+
+&lt;img src="assets/Screenshot 2019-06-19 at 23.28.05.png" width="350px" align="right"&gt;
+&lt;img src="assets/Screenshot 2019-06-19 at 23.28.28.png" width="400px" align="left"&gt;
+
+
+
+---
 name: inspiration
 class: middle, spaced
 
@@ -75,6 +91,7 @@ class: middle, spaced
 
 * Laptop crash! -&gt; new laptop - this old one doesn't like `reticulate` - memory leaks?
 * Log example data contains (timestamp, message) tuples but also other junk
+* Big differences in data between ships (7000/10000 from one little coast guard boat, NAs)
 * Wrapping `ais.py` needs a timestamp to link messages to the original log
 * So this needs a small edit of the `ais.py` file to add this to the JSON output
 * Turns out `ais.py` works well but the JSON could be more detailed
@@ -119,9 +136,9 @@ class: middle, spaced
 # Thank you. Questions?
 
 
-&lt;p&gt;R version 3.4.4 (2018-03-15)&lt;br&gt;&lt;p&gt;Platform: x86_64-pc-linux-gnu (64-bit)&lt;/p&gt;&lt;p&gt;OS: Ubuntu 18.04.2 LTS&lt;/p&gt;&lt;br&gt;
+&lt;p&gt;R version 3.6.0 (2019-04-26)&lt;br&gt;&lt;p&gt;Platform: x86_64-apple-darwin15.6.0 (64-bit)&lt;/p&gt;&lt;p&gt;OS: macOS Mojave 10.14.5&lt;/p&gt;&lt;br&gt;
 
-Built on : &lt;i class='fa fa-calendar' aria-hidden='true'&gt;&lt;/i&gt; 20-jun-2019 at &lt;i class='fa fa-clock-o' aria-hidden='true'&gt;&lt;/i&gt; 07:57:57  
+Built on : &lt;i class='fa fa-calendar' aria-hidden='true'&gt;&lt;/i&gt; 20-Jun-2019 at &lt;i class='fa fa-clock-o' aria-hidden='true'&gt;&lt;/i&gt; 08:04:34  
 
 __2019__ • [SciLifeLab](https://www.scilifelab.se/) • [NBIS](https://nbis.se/)
     </textarea>
