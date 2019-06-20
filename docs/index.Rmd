@@ -108,7 +108,7 @@ class: middle, spaced
 ## Results
 
 Repo: [https://github.com/mskyttner/vikingr](https://github.com/mskyttner/vikingr)
-
+Cloud-friendly distro: [rstudio.cloud + vikingr etc](https://hub.docker.com/r/mskyttner/raukr/tags)
 
 ### Functions
 
