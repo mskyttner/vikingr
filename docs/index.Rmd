@@ -56,7 +56,7 @@ class: middle, spaced
 ### AIS: Automatic Identification System
 
 + intended to assist a vessel's watchstanding officers and allow maritime authorities to track and monitor vessel movements
-+ info such as unique identification, position, course, and speed; sent in tight intervals by every vessel
++ info such as unique identification, position, course, and speed; sent in regular intervals by every vessel
 
 <img src="assets/Screenshot 2019-06-19 at 23.28.05.png" width="350px" align="right">
 <img src="assets/Screenshot 2019-06-19 at 23.28.28.png" width="400px" align="left">
